@@ -3,7 +3,7 @@ import db from './db';
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { profileSchema } from './schemas';
+import { profileSchema, validateFieldSchema } from './schemas';
 import { actionFunction } from './types';
 
 const getAuthUser = async () => {
@@ -30,7 +30,7 @@ export const createUserProfile: actionFunction = async (
     const user = await currentUser();
     if (!user) throw new Error('Please login to create a profile');
     const rawData = Object.fromEntries(formData);
-    const result = profileSchema.parse(rawData);
+    const result = validateFieldSchema(profileSchema, rawData);
     await db.profile.create({
       data: {
         clerkId: user.id,
@@ -78,7 +78,7 @@ export const updateProfileImage = async (
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
-    const validateFields = profileSchema.parse(rawData);
+    const validateFields = validateFieldSchema(profileSchema, rawData);
     await db.profile.update({
       where: { clerkId: user.id },
       data: validateFields,

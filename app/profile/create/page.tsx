@@ -1,5 +1,5 @@
 import FormInput from '@/components/form/FormInput';
-import SubmitBotton from '@/components/form/Buttons';
+import SubmitButton from '@/components/form/Buttons';
 import FormContainer from '@/components/form/FormContainer';
 import { createUserProfile } from '@/utils/actions';
 import { currentUser } from '@clerk/nextjs/server';
@@ -17,7 +17,7 @@ async function CreateProfilePage() {
             <FormInput name='lastName' type='text' label='Last Name' />
             <FormInput name='username' type='text' label='username' />
           </div>
-          <SubmitBotton text='Create a new user' className='mt-8' />
+          <SubmitButton text='Create a new user' className='mt-8' />
         </FormContainer>
       </div>
     </section>
