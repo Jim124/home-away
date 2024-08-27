@@ -71,7 +71,7 @@ export const fetchProfile = async () => {
   return profile;
 };
 
-export const updateProfileImage = async (
+export const updateProfileInfo = async (
   prevState: any,
   formData: FormData
 ): Promise<{ message: string }> => {
@@ -88,4 +88,11 @@ export const updateProfileImage = async (
   } catch (error) {
     return renderError(error);
   }
+};
+
+export const updateProfileImageAction = async (
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> => {
+  return { message: 'Profile image updated successfully' };
 };
