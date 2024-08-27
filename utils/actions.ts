@@ -7,7 +7,7 @@ import { imageSchema, profileSchema, validateFieldSchema } from './schemas';
 import { actionFunction } from './types';
 import { uploadImage } from './supabase';
 
-const getAuthUser = async () => {
+export const getAuthUser = async () => {
   const user = await currentUser();
   if (!user) {
     throw new Error('You must be logged in to access this route');
@@ -16,7 +16,7 @@ const getAuthUser = async () => {
   return user;
 };
 
-const renderError = (error: unknown): { message: string } => {
+export const renderError = (error: unknown): { message: string } => {
   console.log(error);
   return {
     message: error instanceof Error ? error.message : 'An error occurred',
