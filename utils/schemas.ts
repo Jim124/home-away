@@ -21,3 +21,22 @@ export function validateFieldSchema<T>(schema: ZodSchema<T>, data: unknown): T {
   }
   return result.data;
 }
+
+export const imageSchema = z.object({
+  image: validateFile(),
+});
+
+function validateFile() {
+  const maxUploadSize = 1024 * 1024 * 3;
+  const acceptedFilesTypes = ['image/'];
+  return z
+    .instanceof(File)
+    .refine((file) => {
+      return !file || file.size <= maxUploadSize;
+    }, 'File size must be less than 1MB')
+    .refine((file) => {
+      return (
+        !file || acceptedFilesTypes.some((type) => file.type.startsWith(type))
+      );
+    }, 'File must be an image');
+}
