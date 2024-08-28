@@ -4,7 +4,8 @@ import db from '../db';
 import { redirect } from 'next/navigation';
 
 import { getAuthUser, renderError } from '../actions';
-import { propertySchema, validateFieldSchema } from '../schemas';
+import { imageSchema, propertySchema, validateFieldSchema } from '../schemas';
+import { uploadImage } from '../supabase';
 
 export const createPropertyAction = async (
   prevState: any,
@@ -12,12 +13,52 @@ export const createPropertyAction = async (
 ): Promise<{ message: string }> => {
   const user = await getAuthUser();
   try {
+    const file = formData.get('image') as File;
     const rawData = Object.fromEntries(formData);
     const validateFields = validateFieldSchema(propertySchema, rawData);
+    const validateFile = validateFieldSchema(imageSchema, { image: file });
+    const fullPath = await uploadImage(validateFile.image);
+    await db.property.create({
+      data: {
+        ...validateFields,
+        image: fullPath,
+        profileId: user.id,
+      },
+    });
 
-    return { message: 'Create property successfully' };
+    // return { message: 'Create property successfully' };
   } catch (error) {
     return renderError(error);
   }
   redirect('/');
+};
+
+export const fetchProperties = async ({
+  search = '',
+  category,
+}: {
+  search?: string;
+  category?: string;
+}) => {
+  const properties = await db.property.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      tagline: true,
+      price: true,
+      country: true,
+    },
+    where: {
+      category,
+      OR: [
+        { name: { contains: search, mode: 'insensitive' } },
+        { tagline: { contains: search, mode: 'insensitive' } },
+      ],
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  return properties;
 };
