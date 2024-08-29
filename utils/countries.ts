@@ -11,5 +11,5 @@ export const formattedCountries = countries.map((item) => {
 });
 
 export const findCountryByCode = (code: string) => {
-  formattedCountries.find((item) => item.code === code);
+  return formattedCountries.find((item) => item.code === code);
 };
