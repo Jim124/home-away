@@ -62,3 +62,12 @@ export const fetchProperties = async ({
   });
   return properties;
 };
+
+export const fetchPropertyById = async (id: string) => {
+  return await db.property.findUnique({
+    where: { id },
+    include: {
+      profile: true,
+    },
+  });
+};
