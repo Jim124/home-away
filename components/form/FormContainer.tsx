@@ -21,11 +21,7 @@ function FormContainer({
   const { toast } = useToast();
 
   useEffect(() => {
-    if (
-      state.message !== '' &&
-      state.message !== null &&
-      state.message !== undefined
-    ) {
+    if (state && state.message !== '') {
       toast({ description: state.message });
     }
   }, [state, toast]);
