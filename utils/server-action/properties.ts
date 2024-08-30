@@ -5,8 +5,9 @@ import { redirect } from 'next/navigation';
 import { getAuthUser, renderError } from '../actions';
 import { imageSchema, propertySchema, validateFieldSchema } from '../schemas';
 import { uploadFileToFireBase } from '../helper/uploadImagToFirebase';
+import { actionFunction } from '../types';
 
-export const createPropertyAction = async (
+export const createPropertyAction: actionFunction = async (
   prevState: any,
   formData: FormData
 ): Promise<{ message: string | null | undefined }> => {
