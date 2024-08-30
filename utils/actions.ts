@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { imageSchema, profileSchema, validateFieldSchema } from './schemas';
 import { actionFunction } from './types';
-import { uploadImage } from './supabase';
+import { uploadFileToFireBase } from './helper/uploadImagToFirebase';
 
 export const getAuthUser = async () => {
   const user = await currentUser();
@@ -99,7 +99,9 @@ export const updateProfileImageAction = async (
     const user = await getAuthUser();
     const image = formData.get('image') as File;
     const validateFields = validateFieldSchema(imageSchema, { image });
-    const fullPath = await uploadImage(validateFields.image);
+    const fullPath = (await uploadFileToFireBase(
+      validateFields.image
+    )) as string;
     await db.profile.update({
       where: { clerkId: user.id },
       data: {
