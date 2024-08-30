@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { getAuthUser, renderError } from '../actions';
 import { imageSchema, propertySchema, validateFieldSchema } from '../schemas';
 import { uploadFileToFireBase } from '../helper/uploadImagToFirebase';
+import { revalidatePath } from 'next/cache';
 
 export const createPropertyAction = async (
   prevState: any,
@@ -25,11 +26,12 @@ export const createPropertyAction = async (
       },
     });
 
-    // return { message: 'Create property successfully' };
+    revalidatePath('/');
+    return { message: 'Create property successfully' };
   } catch (error) {
     return renderError(error);
   }
-  redirect('/');
+  //redirect('/');
 };
 
 export const fetchProperties = async ({
