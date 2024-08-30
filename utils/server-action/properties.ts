@@ -1,11 +1,10 @@
 'use server';
-import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import db from '../db';
 import { redirect } from 'next/navigation';
 
 import { getAuthUser, renderError } from '../actions';
 import { imageSchema, propertySchema, validateFieldSchema } from '../schemas';
-import { uploadImage } from '../supabase';
+import { uploadFileToFireBase } from '../helper/uploadImagToFirebase';
 
 export const createPropertyAction = async (
   prevState: any,
@@ -17,7 +16,7 @@ export const createPropertyAction = async (
     const rawData = Object.fromEntries(formData);
     const validateFields = validateFieldSchema(propertySchema, rawData);
     const validateFile = validateFieldSchema(imageSchema, { image: file });
-    const fullPath = await uploadImage(validateFile.image);
+    const fullPath = (await uploadFileToFireBase(validateFile.image)) as string;
     await db.property.create({
       data: {
         ...validateFields,
