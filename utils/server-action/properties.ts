@@ -5,12 +5,11 @@ import { redirect } from 'next/navigation';
 import { getAuthUser, renderError } from '../actions';
 import { imageSchema, propertySchema, validateFieldSchema } from '../schemas';
 import { uploadFileToFireBase } from '../helper/uploadImagToFirebase';
-import { revalidatePath } from 'next/cache';
 
 export const createPropertyAction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string }> => {
+) => {
   const user = await getAuthUser();
   try {
     const file = formData.get('image') as File;
@@ -26,12 +25,11 @@ export const createPropertyAction = async (
       },
     });
 
-    revalidatePath('/');
-    return { message: 'Create property successfully' };
+    //return { message: 'Create property successfully' };
   } catch (error) {
     return renderError(error);
   }
-  //redirect('/');
+  redirect('/');
 };
 
 export const fetchProperties = async ({
