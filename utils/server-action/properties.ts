@@ -9,7 +9,7 @@ import { uploadFileToFireBase } from '../helper/uploadImagToFirebase';
 export const createPropertyAction = async (
   prevState: any,
   formData: FormData
-) => {
+): Promise<{ message: string | null | undefined }> => {
   const user = await getAuthUser();
   try {
     const file = formData.get('image') as File;
