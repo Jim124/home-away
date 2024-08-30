@@ -17,16 +17,16 @@ function NavSearch() {
       params.set('search', value);
     } else {
       params.delete('search');
-      setSearch('');
+      // setSearch('');
     }
     replace(`/?${params.toString()}`);
   }, 500);
 
-  // useEffect(() => {
-  //   if (!searchParams.get('search')) {
-  //     setSearch('');
-  //   }
-  // }, [searchParams.get('search')]);
+  useEffect(() => {
+    if (!searchParams.get('search')) {
+      setSearch('');
+    }
+  }, [searchParams.get('search')]);
 
   return (
     <Input
