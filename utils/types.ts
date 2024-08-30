@@ -1,7 +1,7 @@
 export type actionFunction = (
   prevState: any,
   formData: FormData
-) => Promise<{ message: string }>;
+) => Promise<{ message: string | null | undefined }>;
 
 export type PropertyCardProps = {
   id: string;
