@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html suppressHydrationWarning lang='en'>
+      <html suppressHydrationWarning={true} lang='en'>
         <body className={inter.className}>
           <Providers>
             <Navbar />
