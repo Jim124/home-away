@@ -3,6 +3,7 @@ import db from '../db';
 import { getAuthUser, renderError } from '../actions';
 import { calculateTotals } from '../calculateTotals';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export const createBookingAction = async (
   prevState: { propertyId: string; checkIn: Date; checkOut: Date },
@@ -37,4 +38,40 @@ export const createBookingAction = async (
     return renderError(error);
   }
   redirect('/bookings');
+};
+
+export const fetchBookings = async () => {
+  const user = await getAuthUser();
+  return await db.booking.findMany({
+    where: { profileId: user.id },
+    include: {
+      property: {
+        select: {
+          id: true,
+          name: true,
+          country: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+};
+
+export const deleteBookingAction = async (prevState: { bookingId: string }) => {
+  const user = await getAuthUser();
+  const { bookingId } = prevState;
+  try {
+    await db.booking.delete({
+      where: {
+        id: bookingId,
+        profileId: user.id,
+      },
+    });
+    revalidatePath('/bookings');
+    return { message: 'Booking deleted successfully' };
+  } catch (error) {
+    return renderError(error);
+  }
 };
