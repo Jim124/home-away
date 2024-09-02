@@ -68,6 +68,12 @@ export const fetchPropertyById = async (id: string) => {
     where: { id },
     include: {
       profile: true,
+      bookings: {
+        select: {
+          checkIn: true,
+          checkOut: true,
+        },
+      },
     },
   });
 };

@@ -3,7 +3,6 @@ import { auth } from '@clerk/nextjs/server';
 import FavoriteToggleButton from '@/components/card/FavoriteToggleButton';
 import PropertyRating from '@/components/card/PropertyRating';
 import Amenities from '@/components/properties/Amenities';
-import BookingCalendar from '@/components/properties/BookingCalendar';
 import BreadCrumbs from '@/components/properties/BreadCrumbs';
 import Description from '@/components/properties/Description';
 import ImageContainer from '@/components/properties/ImageContainer';
@@ -17,9 +16,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { fetchPropertyById } from '@/utils/server-action/properties';
 import { findExistingReview } from '@/utils/server-action/reviews';
 import dynamic from 'next/dynamic';
+import { Booking } from '@/utils/types';
 
 const DynamicMap = dynamic(
   () => import('@/components/properties/PropertyMap'),
+  { ssr: false, loading: () => <Skeleton className='h-[400px] w-full' /> }
+);
+
+const DynamicBookingWrapper = dynamic(
+  () => import('@/components/booking/BookingWrapper'),
   { ssr: false, loading: () => <Skeleton className='h-[400px] w-full' /> }
 );
 
@@ -32,7 +37,6 @@ async function PropertyDetailPage({ params }: { params: { id: string } }) {
   const details = { baths, bedrooms, beds, guests };
   const firstName = property.profile.firstName;
   const profileImage = property.profile.profileImage;
-
   const { userId } = auth();
 
   const isNotOwner = property.profile.clerkId !== userId;
@@ -67,7 +71,12 @@ async function PropertyDetailPage({ params }: { params: { id: string } }) {
         </div>
         <div className='lg:col-span-4 flex flex-col items-center'>
           {/* calendar */}
-          <BookingCalendar />
+          {/* <BookingCalendar /> */}
+          <DynamicBookingWrapper
+            propertyId={property.id}
+            price={property.price}
+            bookings={property.bookings}
+          />
         </div>
       </section>
       {reviewDoesNotExist && <SubmitReview propertyId={property.id} />}
