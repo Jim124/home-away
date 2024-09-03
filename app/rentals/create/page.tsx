@@ -11,6 +11,7 @@ import ImageInput from '@/components/form/ImageInput';
 import CounterInput from '@/components/form/CounterInput';
 import AmenitiesInput from '@/components/form/AmenitiesInput';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import FormContainerWIthOutMessage from '@/components/form/FormContainerWIthOutMessage';
 
 function CreatePropertyPage() {
   return (
@@ -21,7 +22,7 @@ function CreatePropertyPage() {
         </h1>
         <div className='border p-8 rounded-md'>
           <h3 className='text-lg mb-4 font-medium'>General Info</h3>
-          <FormContainer action={createPropertyAction}>
+          <FormContainerWIthOutMessage action={createPropertyAction}>
             <div className='grid md:grid-cols-2  gap-8 mb-4'>
               <FormInput
                 name='name'
@@ -59,7 +60,7 @@ function CreatePropertyPage() {
             <h3 className='text-lg mt-10 mb-6 font-medium'> Amenities</h3>
             <AmenitiesInput />
             <SubmitButton className='mt-12' text='create rental' />
-          </FormContainer>
+          </FormContainerWIthOutMessage>
         </div>
         <ScrollBar orientation='vertical' />
       </ScrollArea>
