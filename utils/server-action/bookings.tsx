@@ -17,7 +17,11 @@ export const createBookingAction = async (
     },
     where: { id: propertyId },
   });
+
   if (!property) return { message: 'Property not found' };
+  await db.booking.deleteMany({
+    where: { profileId: user.id, paymentStatus: false },
+  });
   const { orderTotal, totalNights } = calculateTotals({
     checkIn,
     checkOut,
@@ -45,7 +49,7 @@ export const createBookingAction = async (
 export const fetchBookings = async () => {
   const user = await getAuthUser();
   return await db.booking.findMany({
-    where: { profileId: user.id },
+    where: { profileId: user.id, paymentStatus: true },
     include: {
       property: {
         select: {

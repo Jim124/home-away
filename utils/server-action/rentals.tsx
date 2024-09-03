@@ -30,7 +30,7 @@ export const fetchRentals = async () => {
   const rentalsWithBookingsSums = await Promise.all(
     rentals.map(async (rental) => {
       const totalNightsSum = await db.booking.aggregate({
-        where: { propertyId: rental.id },
+        where: { propertyId: rental.id, paymentStatus: true },
         _sum: {
           totalNights: true,
         },
