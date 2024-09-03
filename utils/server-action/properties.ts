@@ -77,3 +77,24 @@ export const fetchPropertyById = async (id: string) => {
     },
   });
 };
+
+export const createProperty = async (formData: FormData) => {
+  const user = await getAuthUser();
+  try {
+    const file = formData.get('image') as File;
+    const rawData = Object.fromEntries(formData);
+    const validateFields = validateFieldSchema(propertySchema, rawData);
+    const validateFile = validateFieldSchema(imageSchema, { image: file });
+    const fullPath = (await uploadFileToFireBase(validateFile.image)) as string;
+    await db.property.create({
+      data: {
+        ...validateFields,
+        image: fullPath,
+        profileId: user.id,
+      },
+    });
+  } catch (error) {
+    return renderError(error);
+  }
+  redirect('/');
+};

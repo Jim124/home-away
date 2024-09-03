@@ -1,9 +1,5 @@
 'use client';
-import { useFormState } from 'react-dom';
 
-const initialState = {
-  message: '',
-};
 function FormContainerWIthOutMessage({
   action,
   children,
@@ -11,7 +7,6 @@ function FormContainerWIthOutMessage({
   action: any;
   children: React.ReactNode;
 }) {
-  const [state, formAction] = useFormState(action, initialState);
-  return <form action={formAction}>{children}</form>;
+  return <form action={action}>{children}</form>;
 }
 export default FormContainerWIthOutMessage;

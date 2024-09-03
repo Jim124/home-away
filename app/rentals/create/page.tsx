@@ -1,6 +1,9 @@
 import FormInput from '@/components/form/FormInput';
 import FormContainer from '@/components/form/FormContainer';
-import { createPropertyAction } from '@/utils/server-action/properties';
+import {
+  createPropertyAction,
+  createProperty,
+} from '@/utils/server-action/properties';
 
 import SubmitButton from '@/components/form/Buttons';
 import PriceInput from '@/components/form/PriceInput';
@@ -22,7 +25,7 @@ function CreatePropertyPage() {
         </h1>
         <div className='border p-8 rounded-md'>
           <h3 className='text-lg mb-4 font-medium'>General Info</h3>
-          <FormContainerWIthOutMessage action={createPropertyAction}>
+          <FormContainerWIthOutMessage action={createProperty}>
             <div className='grid md:grid-cols-2  gap-8 mb-4'>
               <FormInput
                 name='name'
