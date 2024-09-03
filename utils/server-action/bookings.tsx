@@ -23,6 +23,7 @@ export const createBookingAction = async (
     checkOut,
     price: property.price,
   });
+  let bookingId: string | null = null;
   try {
     const booking = await db.booking.create({
       data: {
@@ -34,10 +35,11 @@ export const createBookingAction = async (
         profileId: user.id,
       },
     });
+    bookingId = booking.id;
   } catch (error) {
     return renderError(error);
   }
-  redirect('/bookings');
+  redirect(`/checkout?bookingId=${bookingId}`);
 };
 
 export const fetchBookings = async () => {

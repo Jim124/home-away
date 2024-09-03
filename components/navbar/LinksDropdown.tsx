@@ -40,7 +40,11 @@ function LinksDropdown() {
         <SignedIn>
           {links.map((link) => (
             <DropdownMenuItem key={link.href}>
-              <Link href={link.href} className='w-full capitalize'>
+              <Link
+                href={link.href}
+                className='w-full capitalize'
+                scroll={true}
+              >
                 {link.label}
               </Link>
             </DropdownMenuItem>
