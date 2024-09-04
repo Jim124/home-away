@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { imageSchema, profileSchema, validateFieldSchema } from './schemas';
 import { actionFunction } from './types';
 import { uploadFileToFireBase } from './helper/uploadImagToFirebase';
+import { formatDate } from './format';
 
 export const getAuthUser = async () => {
   const user = await currentUser();
@@ -13,6 +14,12 @@ export const getAuthUser = async () => {
     throw new Error('You must be logged in to access this route');
   }
   if (!user.privateMetadata.hasProfile) redirect('/profile/create');
+  return user;
+};
+
+export const getAdminUser = async () => {
+  const user = await getAuthUser();
+  if (user.id !== process.env.ADMIN_USER_ID) redirect('/');
   return user;
 };
 
@@ -113,4 +120,49 @@ export const updateProfileImageAction = async (
   } catch (error) {
     return renderError(error);
   }
+};
+
+export const fetchStats = async () => {
+  await getAdminUser();
+  const usersCount = await db.profile.count();
+  const propertiesCount = await db.property.count();
+  const bookingsCount = await db.booking.count({
+    where: {
+      paymentStatus: true,
+    },
+  });
+  return {
+    usersCount,
+    propertiesCount,
+    bookingsCount,
+  };
+};
+
+export const fetchChars = async () => {
+  await getAdminUser();
+  const date = new Date();
+  date.setMonth(date.getMonth() - 6);
+  const siMonthsAgo = date;
+  const bookings = await db.booking.findMany({
+    where: {
+      paymentStatus: true,
+      createdAt: {
+        gte: siMonthsAgo,
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+  const bookingsPerMonth = bookings.reduce((total, current) => {
+    const date = formatDate(current.createdAt, true);
+    const existingEntry = total.find((entry) => entry.date == date);
+    if (existingEntry) {
+      existingEntry.count += 1;
+    } else {
+      total.push({ date, count: 1 });
+    }
+    return total;
+  }, [] as Array<{ date: string; count: number }>);
+  return bookingsPerMonth;
 };
