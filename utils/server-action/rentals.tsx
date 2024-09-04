@@ -26,6 +26,9 @@ export const fetchRentals = async () => {
       name: true,
       price: true,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
   const rentalsWithBookingsSums = await Promise.all(
     rentals.map(async (rental) => {

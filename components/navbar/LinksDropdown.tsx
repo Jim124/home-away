@@ -11,10 +11,12 @@ import { Button } from '../ui/button';
 import UserIcon from './UserIcon';
 import { links } from '@/utils/links';
 import SignOutLink from './SignOutLink';
-
+import { auth } from '@clerk/nextjs/server';
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from '@clerk/nextjs';
 
 function LinksDropdown() {
+  const { userId } = auth();
+  const isAdminUser = userId === process.env.ADMIN_USER_ID;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,17 +40,27 @@ function LinksDropdown() {
           </DropdownMenuItem>
         </SignedOut>
         <SignedIn>
-          {links.map((link) => (
-            <DropdownMenuItem key={link.href}>
-              <Link
-                href={link.href}
-                className='w-full capitalize'
-                scroll={true}
-              >
-                {link.label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {links.map((link) => {
+            if (
+              (link.label === 'admin' ||
+                link.label === 'my rentals' ||
+                link.label === 'create rental' ||
+                link.label === 'reservations') &&
+              !isAdminUser
+            )
+              return null;
+            return (
+              <DropdownMenuItem key={link.href}>
+                <Link
+                  href={link.href}
+                  className='w-full capitalize'
+                  scroll={true}
+                >
+                  {link.label}
+                </Link>
+              </DropdownMenuItem>
+            );
+          })}
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <SignOutLink />

@@ -25,7 +25,7 @@ function CreatePropertyPage() {
         </h1>
         <div className='border p-8 rounded-md'>
           <h3 className='text-lg mb-4 font-medium'>General Info</h3>
-          <FormContainerWIthOutMessage action={createProperty}>
+          <FormContainer action={createPropertyAction}>
             <div className='grid md:grid-cols-2  gap-8 mb-4'>
               <FormInput
                 name='name'
@@ -63,7 +63,7 @@ function CreatePropertyPage() {
             <h3 className='text-lg mt-10 mb-6 font-medium'> Amenities</h3>
             <AmenitiesInput />
             <SubmitButton className='mt-12' text='create rental' />
-          </FormContainerWIthOutMessage>
+          </FormContainer>
         </div>
         <ScrollBar orientation='vertical' />
       </ScrollArea>

@@ -6,11 +6,12 @@ import { getAuthUser, renderError } from '../actions';
 import { imageSchema, propertySchema, validateFieldSchema } from '../schemas';
 import { uploadFileToFireBase } from '../helper/uploadImagToFirebase';
 import { actionFunction } from '../types';
+import { revalidatePath } from 'next/cache';
 
 export const createPropertyAction: actionFunction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string | null | undefined }> => {
+): Promise<{ message: string }> => {
   const user = await getAuthUser();
   try {
     const file = formData.get('image') as File;
@@ -25,12 +26,13 @@ export const createPropertyAction: actionFunction = async (
         profileId: user.id,
       },
     });
-
+    revalidatePath('/rentals');
+    revalidatePath('/');
     //return { message: 'Create property successfully' };
   } catch (error) {
     return renderError(error);
   }
-  redirect('/');
+  redirect('/rentals');
 };
 
 export const fetchProperties = async ({
