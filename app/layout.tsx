@@ -21,7 +21,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html suppressHydrationWarning={true} lang='en'>
-        <body className={inter.className} suppressHydrationWarning>
+        <body
+          className={inter.className}
+          suppressHydrationWarning
+          style={{ overflow: 'visible' }}
+        >
           <Providers>
             <Navbar />
             <main className='container py-10'>{children}</main>

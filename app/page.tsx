@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import LoadingCards from '@/components/card/LoadingCards';
 import CategoriesList from '@/components/home/CategoriesList';
 import PropertiesContainer from '@/components/home/PropertiesContainer';
-
 function HomePage({
   searchParams,
 }: {
